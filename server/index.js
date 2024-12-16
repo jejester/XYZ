@@ -1,9 +1,14 @@
 const express = require('express');
 const app = express();
 const db = require('./models');
+const cors = require('cors');
 
-app.use(express.json());
 
+//Allows to receive json
+app.use(express.json())
+
+//Whitelist api to make connection to frontend
+app.use(cors());
 //Routers
 const postsRouter = require('./routes/Posts');
 app.use('/posts', postsRouter);
