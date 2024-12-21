@@ -15,4 +15,10 @@ router.post('/create', async (req, res) => {
     res.json({"response": "Post created!"});
 })
 
+router.get('/:id', async (req, res) => {
+    const id = req.params.id;
+    const post = await Posts.findByPk(id);
+    res.json(post);
+})
+
 module.exports = router;
