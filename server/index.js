@@ -12,6 +12,8 @@ app.use(cors());
 //Routers
 const postsRouter = require('./routes/Posts');
 app.use('/posts', postsRouter);
+const commentsRouter = require('./routes/Comments');
+app.use('/comments', commentsRouter);
 
 //Connects to the database then starts the server
 db.sequelize.sync().then(() => {
