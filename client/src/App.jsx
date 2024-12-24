@@ -8,7 +8,7 @@ function App() {
   return (
     <div className="App">
       <Router>
-        <div className="flex flex-row gap-10 items-center justify-start bg-sky-500 text-white py-5 px-10">
+        <div className="flex flex-row gap-10 items-center justify-between bg-sky-500 text-white py-5 px-10">
           <Link className='text-center' to='/'>Home</Link>
           <Link className='text-center' to='/create'>Create post</Link>
         </div>
