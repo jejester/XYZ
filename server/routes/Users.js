@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const { Users } = require('../models');
 const bcrypt = require('bcrypt');
+const { sign } = require('jsonwebtoken')
+require('dotenv').config()
 
 // Route to create a user
 router.post('/create', async (req, res) => {
@@ -20,12 +22,13 @@ router.post('/login', async (req, res) => {
 
     const user = await  Users.findOne({ where: {username: username} });
     
-    if(!user) return res.json("User not found!");
+    if(!user) return res.json({error: "User not found!"});
 
     bcrypt.compare(password, user.password).then((result) => {
-        if(!result) return res.json("Invalid username or password!");
+        if(!result) return res.json({error: "Invalid username or password!"});
 
-        return res.json("Login successful!");
+        const accessToken = sign({username: user.username, id: user.id}, process.env.ACCESS_TOKEN);
+        return res.json(accessToken);
     })
 
 });
