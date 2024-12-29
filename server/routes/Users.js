@@ -2,8 +2,9 @@ const express = require('express');
 const router = express.Router();
 const { Users } = require('../models');
 const bcrypt = require('bcrypt');
-const { sign } = require('jsonwebtoken')
-require('dotenv').config()
+const { sign } = require('jsonwebtoken');
+const { validateToken } = require('../middleware/AuthMiddleware');
+require('dotenv').config();
 
 // Route to create a user
 router.post('/create', async (req, res) => {
@@ -30,8 +31,11 @@ router.post('/login', async (req, res) => {
         const accessToken = sign({username: user.username, id: user.id}, process.env.ACCESS_TOKEN);
         return res.json(accessToken);
     })
-
 });
+
+router.get('/validate', validateToken, (req, res) => {
+    res.json(req.user);
+})
 
 
 module.exports = router;
