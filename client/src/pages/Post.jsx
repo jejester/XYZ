@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import { AuthContext } from '../helpers/AuthContext';
+
 
 function Post() {
 
@@ -8,6 +10,7 @@ function Post() {
     const [post, setPost] = useState([]);
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState("");
+    const { authState } = useContext(AuthContext);
 
     useEffect(() => {
         axios.get(`http://localhost:5000/posts/${id}}`).then((response) => {
@@ -38,9 +41,26 @@ function Post() {
             }
             else{
                 const dateToday = new Date().toDateString();                        
-                const commentToAdd = {commentBody: newComment, createdAt: dateToday, username: response.data.username};
+                const commentToAdd = {commentBody: newComment, createdAt: dateToday, username: response.data.username, id: response.data.id};
                 setComments([...comments, commentToAdd]);
                 setNewComment("");
+            }
+        });
+    }
+
+    const deleteComment = (commentId) => {
+        axios.delete(`http://localhost:5000/comments/${commentId}`, {
+            headers: {
+                accessToken: localStorage.getItem('accessToken')
+            }
+        }).then((response) => {
+            if(response.data.error){
+                alert('Error deleting comment: ' + response.data.error);
+            }
+            else{
+                setComments(comments.filter((val) => {
+                    return val.id != commentId;
+                }))
             }
         });
     }
@@ -67,11 +87,12 @@ function Post() {
                     <div className="mt-10">
                         {comments.map((value, key) => {
                             return <div className="my-5" key={key}> 
-                                <div className="">
+                                <>
                                     <p className="">{value.commentBody}</p>
                                     <p className="">{value.username}</p>
                                     <p className="">{value.createdAt}</p>
-                                </div>
+                                    { authState.username === value.username && <button className='text-red-500 text-sm' onClick={() => deleteComment(value.id)}>Delete</button> }
+                                </>
                             </div>
                         })}
                     </div>

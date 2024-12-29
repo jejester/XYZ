@@ -10,7 +10,11 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 function App() {
-  const [authState, setAuthState] = useState(false);
+  const [authState, setAuthState] = useState({
+    username: "",
+    id: 0,
+    status: false,
+  });
 
   useEffect(() => {
     axios.get('http://localhost:5000/auth/validate', {
@@ -21,16 +25,38 @@ function App() {
     .then((response) => {
       if(response.data.error){
         console.log(response.data.error);
-        setAuthState(false);
+        setAuthState({
+          username: "",
+          id: 0,
+          status: false,
+        });
       }
       else{
-        setAuthState(true);
+        setAuthState({
+          username: response.data.username,
+          id: response.data.id,
+          status: true,
+        });
       }
     }).catch((err) =>{
-      setAuthState(false);
+      setAuthState({
+        username: "",
+        id: 0,
+        status: false,
+      });
       console.log(err);
     });
   }, [])
+
+
+  const logout = () => {
+    localStorage.removeItem('accessToken');
+    setAuthState({
+      username: "",
+      id: 0,
+      status: false,
+    });
+  }
 
   return (
     <div className="App">
@@ -41,10 +67,15 @@ function App() {
               <Link className='text-center' to='/'>Home</Link>
               <Link className='text-center' to='/create'>Create post</Link>
             </div>
-            {!authState && (
+            {!authState.status ? (
               <div className='flex gap-5'>
                 <Link className='text-center' to='/login'>Login</Link>
                 <Link className='text-center' to='/register'>Register</Link>
+              </div>
+            ) : (
+              <div className='flex gap-5'>
+                <p className='text-center'>{authState.username}</p>
+                <button className='text-center' onClick={logout}>Logout</button>
               </div>
             )}
           </div>

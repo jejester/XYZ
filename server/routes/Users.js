@@ -29,7 +29,7 @@ router.post('/login', async (req, res) => {
         if(!result) return res.json({error: "Invalid username or password!"});
 
         const accessToken = sign({username: user.username, id: user.id}, process.env.ACCESS_TOKEN);
-        return res.json(accessToken);
+        return res.json({token: accessToken, username: user.username, id: user.id});
     })
 });
 
