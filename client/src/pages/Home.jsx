@@ -3,15 +3,26 @@ import '../App.css';
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate  } from "react-router-dom";
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 
 function Home() {
 
     let navigate = useNavigate();
+    const [likedPosts, setLikedPosts] = useState([]);
     const [postsList, setPostsList] = useState([]);
 
     useEffect(() => {
-            axios.get('http://localhost:5000/posts').then((response) => {
-                setPostsList(response.data);
+            axios.get('http://localhost:5000/posts', 
+            {
+                headers: {
+                    accessToken: localStorage.getItem("accessToken"),
+                }
+            }
+            ).then((response) => {
+                setPostsList(response.data.postsList);
+                setLikedPosts(response.data.likedPosts.map((like) => {
+                    return like.PostId;  
+                }));
             });
     }, [])
 
@@ -37,11 +48,21 @@ function Home() {
                 else{
                     return post;
                 }
-            }))
+            })
+        
+        );
+        
+        if(likedPosts.includes(postId)){
+            setLikedPosts(likedPosts.filter((id) => id!== postId));
+        }
+        else{
+            setLikedPosts([...likedPosts, postId]);
+        }
+
         }).catch((error) => {
             console.error(error);
-        })
-    }
+        });
+    };
 
     return (
         <div className="App">
@@ -53,9 +74,9 @@ function Home() {
                 <p className='font-sans p-28' onClick={() => navigate(`/posts/${value.id}`)}>{value.postText}</p>
                 <div className="flex items-center justify-between w-full bg-blue-100">
                     <p className='font-sans p-5'>{value.username}</p>
-                    <div className="flex">
-                        <button className='px-5' onClick={() => {likePost(value.id);}}>Like</button>
-                        <p className='font-sans p-5'>{value.Likes.length}</p>
+                    <div className="flex justify-center items-center px-5">
+                        <ThumbUpIcon className={likedPosts.includes(value.id) ? 'text-blue-500' : 'text-blue-300'} onClick={() => {likePost(value.id);}} />
+                        <p className='font-sans py-5 ml-2'>{value.Likes.length}</p>
                     </div>
                 </div>
                 {/* <p className='font-sans'>{Date.format(value.createdAt}</p> */}

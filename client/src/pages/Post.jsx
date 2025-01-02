@@ -59,7 +59,7 @@ function Post() {
             }
             else{
                 setComments(comments.filter((val) => {
-                    return val.id != commentId;
+                    return val.id !== commentId;
                 }))
             }
         });
