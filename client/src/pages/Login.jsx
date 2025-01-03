@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
@@ -7,7 +7,8 @@ import { AuthContext } from '../helpers/AuthContext';
 
 function Login() {
   const { setAuthState } = useContext(AuthContext)
-
+  const { authState } = useContext(AuthContext);
+  
   let navigate = useNavigate();
 
   const initialValues = {
@@ -19,7 +20,7 @@ function Login() {
     username: Yup.string().min(3).max(15).required('Username is required'),
     password: Yup.string().min(5).max(20).required('Password is required'),
   })
-  
+
   const onSubmit = (data) => {
     axios.post('http://localhost:5000/auth/login', data).then((response) => {
       if (response.data.error) {
@@ -31,7 +32,7 @@ function Login() {
           username: response.data.username,
           id: response.data.id,
           status: true,
-        });
+        });        
         navigate('/');
       }
     }).catch((error) => {

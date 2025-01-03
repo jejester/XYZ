@@ -1,8 +1,9 @@
 import React from 'react'
 import '../App.css';
 import axios from "axios";
-import { useEffect, useState } from "react";
-import { useNavigate  } from "react-router-dom";
+import { useEffect, useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from '../helpers/AuthContext';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 
 function Home() {
@@ -10,8 +11,15 @@ function Home() {
     let navigate = useNavigate();
     const [likedPosts, setLikedPosts] = useState([]);
     const [postsList, setPostsList] = useState([]);
+    const { authState } = useContext(AuthContext);
+    
+    
 
     useEffect(() => {
+        if (!localStorage.getItem('accessToken')){
+            navigate('/login');            
+        }
+        else{
             axios.get('http://localhost:5000/posts', 
             {
                 headers: {
@@ -24,6 +32,8 @@ function Home() {
                     return like.PostId;  
                 }));
             });
+        }
+
     }, [])
 
     const likePost = (postId) => {

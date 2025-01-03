@@ -11,8 +11,10 @@ router.get('/', validateToken, async (req, res) => {
 });
 
 // Route to create a post
-router.post('/create', async (req, res) => {
+router.post('/create', validateToken, async (req, res) => {
     const post = req.body;
+    const username = req.user.username;
+    post.username = username;
     await Posts.create(post);
     res.json({"response": "Post created!"});
 })
@@ -21,6 +23,16 @@ router.get('/:id', async (req, res) => {
     const id = req.params.id;
     const post = await Posts.findByPk(id);
     res.json(post);
+})
+
+router.delete('/:id', validateToken, async (req, res) => {
+    const id = req.params.id;
+    await Posts.destroy({
+        where: {
+            id: id
+        }
+    })
+    res.json({"response": "Post deleted!"});
 })
 
 module.exports = router;

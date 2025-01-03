@@ -5,6 +5,7 @@ import CreatePost from './pages/CreatePost';
 import Post from './pages/Post';
 import Register  from './pages/Register';
 import Login  from './pages/Login';
+// import LandingPage  from './pages/LandingPage';
 import PageNotFound  from './pages/PageNotFound';
 import { AuthContext } from './helpers/AuthContext';
 import { useState, useEffect } from 'react';
@@ -57,6 +58,7 @@ function App() {
       id: 0,
       status: false,
     });
+    window.location.reload();
   }
 
   return (
@@ -65,8 +67,6 @@ function App() {
         <Router>
             <div className='flex flex-row gap-10 items-center justify-between bg-sky-500 text-white py-5 px-10'>
           <div className="flex gap-5">
-              <Link className='text-center' to='/'>Home</Link>
-              <Link className='text-center' to='/create'>Create post</Link>
             </div>
             {!authState.status ? (
               <div className='flex gap-5'>
@@ -74,7 +74,10 @@ function App() {
                 <Link className='text-center' to='/register'>Register</Link>
               </div>
             ) : (
+              
               <div className='flex gap-5'>
+                <Link className='text-center' to='/'>Home</Link>
+                <Link className='text-center' to='/create'>Create post</Link>
                 <p className='text-center'>{authState.username}</p>
                 <button className='text-center' onClick={logout}>Logout</button>
               </div>
