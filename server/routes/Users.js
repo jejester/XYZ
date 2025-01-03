@@ -37,5 +37,16 @@ router.get('/validate', validateToken, (req, res) => {
     res.json(req.user);
 })
 
+router.get('/user/:id', validateToken, async (req, res) => {
+    const userId = req.params.id;
+    const user = await Users.findByPk(userId, {attributes: {exclude: ['password']}});
+    if(!user){
+        res.json({error: 'User not found!'});
+    }
+    else{
+        res.json(user);
+    }
+})
+
 
 module.exports = router;

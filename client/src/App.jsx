@@ -5,6 +5,7 @@ import CreatePost from './pages/CreatePost';
 import Post from './pages/Post';
 import Register  from './pages/Register';
 import Login  from './pages/Login';
+import Profile from './pages/Profile';
 // import LandingPage  from './pages/LandingPage';
 import PageNotFound  from './pages/PageNotFound';
 import { AuthContext } from './helpers/AuthContext';
@@ -78,7 +79,7 @@ function App() {
               <div className='flex gap-5'>
                 <Link className='text-center' to='/'>Home</Link>
                 <Link className='text-center' to='/create'>Create post</Link>
-                <p className='text-center'>{authState.username}</p>
+                <Link className='text-center' to='/profile'>{authState.username}</Link>
                 <button className='text-center' onClick={logout}>Logout</button>
               </div>
             )}
@@ -89,6 +90,7 @@ function App() {
             <Route path='/posts/:id' element={<Post/>}/>
             <Route path='/login' element={<Login/>}/>
             <Route path='/register' element={<Register/>}/>
+            <Route path='/profile/:id' element={<Profile/>}/>
             <Route path='*' element={<PageNotFound/>} />
           </Routes >
         </Router>

@@ -14,13 +14,19 @@ function Post() {
     const { authState } = useContext(AuthContext);
 
     useEffect(() => {
-        axios.get(`http://localhost:5000/posts/${id}}`).then((response) => {
-            setPost(response.data);            
-        });
 
-        axios.get(`http://localhost:5000/comments/${id}}`).then((response) => {
-            setComments(response.data);            
-        });
+        if(!localStorage.getItem('accessToken')){
+            navigate('/login');
+        }
+        else{
+            axios.get(`http://localhost:5000/posts/${id}}`).then((response) => {
+                setPost(response.data);            
+            });
+    
+            axios.get(`http://localhost:5000/comments/${id}}`).then((response) => {
+                setComments(response.data);            
+            });
+        }
 
     }, []);
 
