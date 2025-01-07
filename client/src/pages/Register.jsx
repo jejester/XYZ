@@ -1,9 +1,19 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../helpers/AuthContext';
 
 function Register() {
+  const { setAuthState } = useContext(AuthContext)
+  const { authState } = useContext(AuthContext);
+
+  let navigate = useNavigate();
+
+  if(authState.status){
+    navigate('/')
+  }
 
   const initialValues = {
     username: '',

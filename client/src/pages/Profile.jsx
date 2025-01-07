@@ -21,7 +21,6 @@ function Profile() {
         ).then((response) => {
             if(response.data.error){
                 console.log('Error getting user profile: ' + response.data.error);
-                navigate('/login');
             }
             else{
                 const dateJoined  = new Date(response.data.createdAt);
@@ -40,7 +39,6 @@ function Profile() {
         ).then((response) => {
             if(response.data.error){
                 console.log(response.data.error);
-                navigate('/login');
             }
             else{
                 setUserPostsList(response.data);   

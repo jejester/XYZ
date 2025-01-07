@@ -2,7 +2,7 @@ import React from 'react'
 import '../App.css';
 import axios from "axios";
 import { useEffect, useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from '../helpers/AuthContext';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 
@@ -83,7 +83,7 @@ function Home() {
                 <h1 className='text-3xl bg-blue-300 w-full font-serif text-center p-5'>{value.title}</h1>
                 <p className='font-sans p-28' onClick={() => navigate(`/posts/${value.id}`)}>{value.postText}</p>
                 <div className="flex items-center justify-between w-full bg-blue-100">
-                    <p className='font-sans p-5'>{value.username}</p>
+                    <Link className='font-sans p-5' to={`/profile/${value.UserId}`}>{value.username}</Link>
                     <div className="flex justify-center items-center px-5">
                         <ThumbUpIcon className={likedPosts.includes(value.id) ? 'text-blue-500' : 'text-blue-300'} onClick={() => {likePost(value.id);}} />
                         <p className='font-sans py-5 ml-2'>{value.Likes.length}</p>

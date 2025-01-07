@@ -11,6 +11,10 @@ function Login() {
   
   let navigate = useNavigate();
 
+  if(authState.status){
+    navigate('/')
+  }
+
   const initialValues = {
     username: '',
     password: '',
