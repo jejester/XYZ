@@ -79,7 +79,7 @@ function App() {
               <div className='flex gap-5'>
                 <Link className='text-center' to='/'>Home</Link>
                 <Link className='text-center' to='/create'>Create post</Link>
-                <Link className='text-center' to='/profile'>{authState.username}</Link>
+                <Link className='text-center' to={`/profile/${authState.id}`}>{authState.username}</Link>
                 <button className='text-center' onClick={logout}>Logout</button>
               </div>
             )}

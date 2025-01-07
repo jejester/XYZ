@@ -29,7 +29,7 @@ router.get('/:id', async (req, res) => {
 // Route to get all the post of a certain use
 router.get('/byUser/:id', validateToken, async (req, res) => {
     const id = req.params.id;
-    const posts = await Posts.findAll({ where: { UserId: id } });
+    const posts = await Posts.findAll({ where: { UserId: id }, include: [Likes] });
     res.json(posts);
 });
 
