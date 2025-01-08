@@ -6,6 +6,7 @@ import Post from './pages/Post';
 import Register  from './pages/Register';
 import Login  from './pages/Login';
 import Profile from './pages/Profile';
+import UpdatePassword from './pages/UpdatePassword';
 // import LandingPage  from './pages/LandingPage';
 import PageNotFound  from './pages/PageNotFound';
 import { AuthContext } from './helpers/AuthContext';
@@ -76,11 +77,15 @@ function App() {
               </div>
             ) : (
               
-              <div className='flex gap-5'>
-                <Link className='text-center' to='/'>Home</Link>
-                <Link className='text-center' to='/create'>Create post</Link>
-                <Link className='text-center' to={`/profile/${authState.id}`}>{authState.username}</Link>
-                <button className='text-center' onClick={logout}>Logout</button>
+              <div className='flex flex-row  w-full items-center justify-between gap-5'>
+                <div className="flex gap-10">
+                  <Link className='text-center' to='/'>Home</Link>
+                  <Link className='text-center' to='/create'>Create post</Link>
+                </div>
+                <div className='flex gap-10'>
+                  <Link className='text-center' to={`/profile/${authState.id}`}>{authState.username}</Link>
+                  <button className='text-center' onClick={logout}>Logout</button>
+                </div>
               </div>
             )}
           </div>
@@ -91,6 +96,7 @@ function App() {
             <Route path='/login' element={<Login/>}/>
             <Route path='/register' element={<Register/>}/>
             <Route path='/profile/:id' element={<Profile/>}/>
+            <Route path='/profile/update' element={<UpdatePassword/>} />
             <Route path='*' element={<PageNotFound/>} />
           </Routes >
         </Router>

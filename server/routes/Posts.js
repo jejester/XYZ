@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { Posts, Likes } = require('../models');
+const { Posts, Likes, Comments } = require('../models');
 const { validateToken } = require('../middleware/AuthMiddleware');
 
 // /post route to retrieve list of all post from the database
@@ -29,9 +29,33 @@ router.get('/:id', async (req, res) => {
 // Route to get all the post of a certain use
 router.get('/byUser/:id', validateToken, async (req, res) => {
     const id = req.params.id;
-    const posts = await Posts.findAll({ where: { UserId: id }, include: [Likes] });
+    const posts = await Posts.findAll({ where: { UserId: id },   include: [
+        {
+            model: Comments,
+            as: 'Comments',
+        },
+        {
+            model: Likes,
+            as: 'Likes',
+        },
+    ], 
+    });
     res.json(posts);
 });
+
+//Router to edit title
+router.put('/title', validateToken, async (req, res) => {
+    const { newTitle, id } = req.body;
+    await Posts.update({title: newTitle}, {where: {id: id} });
+    res.json(newTitle);
+})
+
+//Router to edit post body
+router.put('/postText', validateToken, async (req, res) => {
+    const { newPost, id } = req.body;
+    await Posts.update({postText: newPost}, {where: {id: id} });
+    res.json(newPost);
+})
 
 //Route to delete a post
 router.delete('/:id', validateToken, async (req, res) => {

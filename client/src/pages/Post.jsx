@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from '../helpers/AuthContext';
 
@@ -91,15 +91,48 @@ function Post() {
         });
     }
 
+    const editPost = (option) => {
+        if (option === "title"){
+            let newTitle = prompt("Enter new title:");
+            axios.put('http://localhost:5000/posts/title', {newTitle: newTitle, id: id}, {
+                headers: {
+                    accessToken: localStorage.getItem("accessToken"),
+                }
+            }).then((response) => {
+                if(response.data.error){
+                    console.log(response.data.error);
+                }                
+                else{
+                    setPost({...post, title: response.data});
+                }
+            });
+        }
+        else{
+            let newPostText = prompt("Enter new post body:");
+            axios.put('http://localhost:5000/posts/postText', {newPost: newPostText, id: id}, {
+                headers: {
+                    accessToken: localStorage.getItem("accessToken"),
+                }
+            }).then((response) => {
+                if(response.data.error){
+                    console.log(response.data.error);
+                }
+                else{
+                    setPost({...post, postText: response.data});
+                }
+            });
+        }
+    }
+
     return (
         <>
             <div className="flex flex-col items-center justify-center mt-20 w-full">
                 <div className='content'>
                     <div key={post.id}>
-                        <h2 className='text-5xl font-semibold font-sans'>{post.title}</h2>
+                        <h2 className='text-5xl font-semibold font-sans' onClick={ () => {if(authState.username === post.username){ editPost("title")}}}>{post.title}</h2>
                         <p>Posted by: {post.username}</p>
                         <div className='py-20'>
-                            <p className=''>{post.postText}</p> 
+                            <p className='' onClick={ () => {if(authState.username === post.username){ editPost("body")}}}>{post.postText}</p> 
                             {authState.username === post.username && (
                                 <button onClick={() => deletePost(post.id)}>Delete Post</button>
                             )}
@@ -110,7 +143,7 @@ function Post() {
                         <div className="border border-b-2"></div>
                     </div>
                     <div className="comment-section flex flex-col items-end mt-4">
-                        <input name='commentInput' onChange={(event) => {setNewComment(event.target.value)}} className='border w-96 h-32 p-2' type="text" placeholder='Add comment' value={newComment}/>
+                        <input name='commentInput' onChange={(event) => {setNewComment(event.target.value)}} className='border w-full h-32 p-2' type="text" placeholder='Add comment' value={newComment}/>
                         <button onClick={addComment}>Comment</button>
                     </div>
                     <div className="mt-10">
@@ -118,7 +151,7 @@ function Post() {
                             return <div className="my-5" key={key}> 
                                 <>
                                     <p className="">{value.commentBody}</p>
-                                    <p className="">{value.username}</p>
+                                    <Link className="" to={`/profile/`}>{value.username}</Link>
                                     <p className="">{value.createdAt}</p>
                                     { authState.username === value.username && <button className='text-red-500 text-sm' onClick={() => deleteComment(value.id)}>Delete</button> }
                                 </>
