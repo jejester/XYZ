@@ -73,7 +73,7 @@ function Profile() {
             <hr className='mx-96' />
                 {userPosts.map((value, key) => {
                     return (
-                        <div className="flex flex-col items-center justify-start text-start mt-10 mb-20 w-96 mx-auto" key={key}>
+                        <div className="flex flex-col items-center justify-start text-start mt-10 mb-20 w-96 mx-auto hover:cursor-pointer" key={key} onClick={() => navigate(`/posts/${value.id}`)}>
                             <div className="w-96">
                                 <h1 className='text-start text-4xl'>{value.title}</h1>
                                 <p>{value.postText}</p>

@@ -35,7 +35,7 @@ router.post('/login', async (req, res) => {
 
 router.get('/validate', validateToken, (req, res) => {
     res.json(req.user);
-})
+});
 
 router.get('/user/:id', validateToken, async (req, res) => {
     const userId = req.params.id;
@@ -46,7 +46,22 @@ router.get('/user/:id', validateToken, async (req, res) => {
     else{
         res.json(user);
     }
-})
+});
 
+router.post('/update/password', validateToken, async (req, res) => {
+    const { oldPassword, newPassword } = req.body;
+    const user = await Users.findOne({ where: {username: req.user.username} }); 
+    bcrypt.compare(oldPassword, user.password).then(async (result) => {
+        if(!result){
+            res.json({error: 'Invalid password!'});
+        }
+        else{
+            bcrypt.hash(newPassword, 10).then((hash) => {
+                Users.update({password: hash}, { where: {username: req.user.username} });
+            });
+            res.json({message: 'Password updated successfully!'});
+        }
+    });
+});
 
 module.exports = router;
